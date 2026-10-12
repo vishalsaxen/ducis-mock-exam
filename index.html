@@ -709,7 +709,15 @@ window.DUCIS_FIREBASE_CONFIG = {
   async function loadProfile() {
     const u = be.auth.currentUser;
     let data = {};
-    try { const snap = await userDoc().get(); data = snap.exists ? snap.data() : {}; } catch (e) { console.warn(e); }
+    try {
+      const snap = await userDoc().get();
+      data = snap.exists ? snap.data() : {};
+      // Accounts created before their profile was saved (or whose save failed) get one now, as a student.
+      if (!snap.exists) {
+        data = { name: u.displayName || u.email.split('@')[0], email: u.email, phone: '', role: 'student', emailVerified: u.emailVerified, createdAt: stamp() };
+        await userDoc().set(data);
+      }
+    } catch (e) { console.warn('profile', e); }
     state.user = { name: data.name || u.displayName || u.email.split('@')[0], email: u.email, phone: data.phone || '' };
     state.role = data.role === 'admin' ? 'admin' : 'student';
     if (!data.emailVerified && u.emailVerified) userDoc().set({ emailVerified: true }, { merge: true }).catch(console.warn);
