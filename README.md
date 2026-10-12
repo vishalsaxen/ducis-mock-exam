@@ -22,4 +22,23 @@ Clickable single-file HTML prototype of the Ducis Mock Exam app. Open `index.htm
 - **Phone**: country code dropdown grouped by region (India, Asia, Middle East incl. UAE, USA/Canada, Europe incl. EU members, Africa, Australia/New Zealand). Each country checks national number length and mobile leading digits.
 - **Username**: 3 to 30 characters, starts with a letter.
 
-Auth, email codes and storage are simulated in the browser; there is no backend yet.
+
+## Database (Firebase project `ducis-mock-exam`)
+
+The app runs in **demo mode** (everything kept in the browser tab) until the Firebase config is filled in. With the config, it uses:
+
+- **Firebase Authentication** (email/password) for register and login, with a verification **link** email (Firebase does not send 4-digit codes) and password reset emails.
+- **Cloud Firestore** for data:
+  - `users/{uid}`: name, email, phone, country, emailVerified, copyrightAcknowledgedAt, createdAt
+  - `users/{uid}/quizzes/{id}`: count, questions (question, options, correctIndex), createdAt
+  - `users/{uid}/attempts/{id}`: quizId, total, correct, skipped, pct, pass, answers, createdAt
+
+### Setup
+
+1. Firebase console > Project settings > General > Your apps: add a **Web app** (if there isn't one) and copy its config.
+2. In `index.html`, find `window.DUCIS_FIREBASE_CONFIG` near the bottom and paste `apiKey`, `messagingSenderId` and `appId` (check `authDomain`, `projectId` and `storageBucket` match too).
+3. Authentication > Sign-in method: enable **Email/Password**.
+4. Firestore Database: create a database, then publish the rules in `firestore.rules` (paste them in the Rules tab, or run `firebase deploy --only firestore:rules`).
+5. Serve the page over http(s), not by double-clicking the file: `npx serve .` locally (localhost is an authorized domain by default), or `firebase deploy --only hosting`. Add any other domain under Authentication > Settings > Authorized domains.
+
+The web `apiKey` is not a secret; access is controlled by the Firestore rules and the authorized domains.

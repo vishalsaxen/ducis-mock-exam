@@ -75,6 +75,12 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
 .rules li.met { color: var(--good); }
 .rules li.met::before { content: "✓"; }
 @media (max-width: 420px) { .rules { grid-template-columns: 1fr; } }
+.mode { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 4px 12px; }
+.mode i { width: 8px; height: 8px; border-radius: 50%; background: var(--violet-soft); }
+.mode.live i { background: var(--good); }
+.ok-msg { color: var(--good); font-size: 14px; margin: 0; }
+.history { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.history li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; background: var(--bg); border-radius: 12px; padding: 10px 12px; font-variant-numeric: tabular-nums; }
 .err { color: var(--bad); font-size: 14px; min-height: 1.2em; margin: 0; }
 .back { background: none; border: 0; font: inherit; color: var(--violet); cursor: pointer; padding: 0; font-weight: 600; }
 
@@ -218,6 +224,7 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
       <button class="btn btn-outline" data-go="register">Click to Register</button>
     </div>
     <img class="logo" src="data:image/jpeg;base64,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" alt="Ducis Group">
+    <p style="margin-top:24px"><span class="mode" id="modeBadge"><i></i><span>Demo mode: data stays in this browser tab</span></span></p>
   </section>
 
   <!-- 1b. Login -->
@@ -231,10 +238,11 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
         <div class="pw"><input id="liPass" type="password" autocomplete="current-password" maxlength="64" aria-describedby="liPassErr"><button type="button" class="eye" data-eye="liPass" aria-label="Show password"></button></div>
         <p class="ferr" id="liPassErr"></p>
       </div>
+      <div class="right"><button type="button" class="link" id="liForgot">Forgot Password?</button></div>
       <p class="err" id="loginErr"></p>
-      <button class="btn btn-violet" type="submit">Login</button>
+      <button class="btn btn-violet" type="submit" id="loginBtn">Login</button>
       <p class="center" style="margin:0">New here? <button type="button" class="link" style="font-size:15px" data-go="register">Create an account</button></p>
-      <p class="hint">Prototype: if you registered in this session, use that email and password. Otherwise any valid email and a password that meets the rules signs you in.</p>
+      <p class="hint demo-only">Demo mode: if you registered in this session, use that email and password. Otherwise any valid email and a password that meets the rules signs you in.</p>
     </form>
   </section>
 
@@ -279,8 +287,17 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
   <section data-screen="verify" hidden>
     <div class="brand">Ducis Mock Exam</div>
     <h1>Verify Email</h1>
-    <p class="lede">We've sent a 4-digit verification code to <b id="vfEmail" style="color:var(--ink)">your email</b>. Please enter the code below to verify your account.</p>
-    <form class="stack" id="verifyForm" novalidate>
+    <p class="lede demo-only">We've sent a 4-digit verification code to <b class="vfEmail" style="color:var(--ink)">your email</b>. Please enter the code below to verify your account.</p>
+    <div class="stack fb-only" id="verifyLink">
+      <p class="lede" style="margin:0">We've sent a verification link to <b class="vfEmail" style="color:var(--ink)">your email</b>. Open the email, click the link, then come back here.</p>
+      <p class="err" id="vlErr"></p>
+      <p class="ok-msg" id="vlOk"></p>
+      <button class="btn btn-violet" id="vlCheck">I've verified my email</button>
+      <button class="btn btn-ghost btn-small" id="vlResend" style="width:100%">Resend the email</button>
+      <p class="hint" style="margin:0">Can't find it? Check your spam or promotions folder.</p>
+      <button type="button" class="back" id="vlBack">&larr; Back to login</button>
+    </div>
+    <form class="stack demo-only" id="verifyForm" novalidate>
       <div class="field"><label for="vfCode">Verification Code</label><input id="vfCode" type="text" inputmode="numeric" maxlength="4" autocomplete="one-time-code" style="letter-spacing:.5em;font-weight:700;font-size:20px"></div>
       <p class="err" id="vfErr"></p>
       <button class="btn btn-violet" type="submit" id="vfBtn" disabled>Verify Email</button>
@@ -339,6 +356,11 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
           <span>I have read the copyright information and acknowledge it.<br><small id="ackHelp" style="color:var(--muted);font-weight:400">Open and read the copyright information to enable this box.</small></span>
         </label>
         <button class="btn btn-navy" id="startQuiz" disabled>Start Quiz</button>
+      </div>
+
+      <div class="panel stack" id="historyPanel" style="gap:10px" hidden>
+        <p class="eyebrow">Your recent results</p>
+        <ul class="history" id="history"></ul>
       </div>
 
       <p class="footer-note">ITIL® Foundation | Sample Paper 1 | Copyright © PeopleCert International Limited</p>
@@ -425,6 +447,7 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
       </div>
       <span class="pill" id="sPill">Pass</span>
       <p class="meta" style="margin-top:8px">Pass mark for this mock: 65%</p>
+      <p class="meta" id="sSaved" style="margin:4px 0 0"></p>
     </div>
     <div class="stats" style="margin:18px 0">
       <div class="stat"><b id="sCorrect">0</b><span>Correct</span></div>
@@ -496,6 +519,22 @@ This publication is designed to provide helpful information to the recipient. Al
 </div>
 
 <script>
+/* =====================================================================
+   FIREBASE CONFIG  (project: ducis-mock-exam)
+   Paste the values from Firebase console > Project settings > General >
+   Your apps > Web app > SDK setup and configuration > "Config".
+   While apiKey / appId are empty the app runs in demo mode (no database).
+   ===================================================================== */
+window.DUCIS_FIREBASE_CONFIG = {
+  apiKey: "",
+  authDomain: "ducis-mock-exam.firebaseapp.com",
+  projectId: "ducis-mock-exam",
+  storageBucket: "ducis-mock-exam.firebasestorage.app",
+  messagingSenderId: "",
+  appId: ""
+};
+</script>
+<script>
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -510,6 +549,8 @@ This publication is designed to provide helpful information to the recipient. Al
     answers: [],       // index or null
     qIndex: 0,
     result: null,
+    history: [],       // demo-mode results
+    quizId: null,
   };
 
   const SAMPLES = [
@@ -540,6 +581,79 @@ This publication is designed to provide helpful information to the recipient. Al
     const t = e.target.closest('[data-go]');
     if (t) { e.preventDefault(); go(t.dataset.go); }
   });
+
+  // ---------- backend: Firebase when configured, otherwise demo ----------
+  const FB_CFG = window.DUCIS_FIREBASE_CONFIG || {};
+  const FB_READY = ['apiKey', 'projectId', 'appId'].every(k => FB_CFG[k]);
+  const FB_SDK = 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
+  const be = { mode: 'demo', auth: null, db: null };
+  const loadScript = src => new Promise((res, rej) => {
+    const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Could not load ' + src));
+    document.head.appendChild(s);
+  });
+  const FB_ERRORS = {
+    'auth/email-already-in-use': 'An account with this email already exists. Log in instead.',
+    'auth/invalid-email': 'Enter a valid email address.',
+    'auth/weak-password': 'Firebase rejected this password as too weak.',
+    'auth/invalid-credential': 'Email or password is incorrect.',
+    'auth/invalid-login-credentials': 'Email or password is incorrect.',
+    'auth/wrong-password': 'Email or password is incorrect.',
+    'auth/user-not-found': 'No account uses this email. Register first.',
+    'auth/user-disabled': 'This account has been disabled.',
+    'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.',
+    'auth/network-request-failed': 'Network error. Check your connection and try again.',
+    'auth/operation-not-allowed': 'Email/password sign-in is off. Turn it on in Firebase > Authentication > Sign-in method.',
+    'auth/unauthorized-domain': 'This website is not an authorized domain. Add it in Firebase > Authentication > Settings > Authorized domains.',
+    'auth/api-key-not-valid.-please-pass-a-valid-api-key.': 'The Firebase apiKey in the config is not valid. Copy it again from Project settings.',
+    'auth/invalid-api-key': 'The Firebase apiKey in the config is not valid. Copy it again from Project settings.',
+    'permission-denied': 'The database refused this request. Check the Firestore security rules.',
+    'unavailable': 'The database is unreachable right now. Try again shortly.',
+  };
+  const fbMsg = e => FB_ERRORS[e && e.code] || (e && e.message) || 'Something went wrong. Try again.';
+  const stamp = () => firebase.firestore.FieldValue.serverTimestamp();
+  const userDoc = () => be.db.collection('users').doc(be.auth.currentUser.uid);
+
+  function renderMode() {
+    const live = be.mode === 'firebase';
+    $('#modeBadge').classList.toggle('live', live);
+    $('#modeBadge span').textContent = live ? 'Connected to Firebase' : (be.error || 'Demo mode: data stays in this browser tab');
+    $$('.demo-only').forEach(el => el.hidden = live);
+    $$('.fb-only').forEach(el => el.hidden = !live);
+  }
+  async function initBackend() {
+    if (FB_READY) {
+      try {
+        for (const f of ['firebase-app-compat.js', 'firebase-auth-compat.js', 'firebase-firestore-compat.js']) await loadScript(FB_SDK + f);
+        firebase.initializeApp(FB_CFG);
+        be.auth = firebase.auth(); be.db = firebase.firestore(); be.mode = 'firebase';
+        // Restore a signed-in, verified session on reload.
+        const first = await new Promise(res => { const off = be.auth.onAuthStateChanged(u => { off(); res(u); }); });
+        if (first && first.emailVerified && !$('[data-screen=landing]').hidden) { await loadProfile(); go('home'); }
+      } catch (e) {
+        console.warn('Firebase unavailable, using demo mode:', e);
+        be.mode = 'demo'; be.error = 'Firebase unreachable: running in demo mode';
+      }
+    }
+    renderMode();
+  }
+  async function loadProfile() {
+    const u = be.auth.currentUser;
+    let data = {};
+    try { const snap = await userDoc().get(); data = snap.exists ? snap.data() : {}; } catch (e) { console.warn(e); }
+    state.user = { name: data.name || u.displayName || u.email.split('@')[0], email: u.email, phone: data.phone || '' };
+    if (!data.emailVerified && u.emailVerified) userDoc().set({ emailVerified: true }, { merge: true }).catch(console.warn);
+  }
+  async function loadHistory() {
+    if (be.mode === 'firebase') {
+      const qs = await userDoc().collection('attempts').orderBy('createdAt', 'desc').limit(5).get();
+      return qs.docs.map(d => { const a = d.data(); return { date: a.createdAt ? a.createdAt.toDate() : new Date(), correct: a.correct, n: a.total, pct: a.pct }; });
+    }
+    return state.history.slice(-5).reverse();
+  }
+  function busy(btn, on, label) {
+    if (on) { btn.dataset.label = btn.textContent; btn.textContent = label; btn.disabled = true; }
+    else { btn.textContent = btn.dataset.label || btn.textContent; btn.disabled = false; }
+  }
 
   // ---------- password eye ----------
   const eyeOpen = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
@@ -651,12 +765,23 @@ This publication is designed to provide helpful information to the recipient. Al
     $(s).addEventListener('blur', () => { if ($(s).value) touched.add(s); renderLoginErrors(); });
     $(s).addEventListener('input', () => { $('#loginErr').textContent = ''; renderLoginErrors(); });
   });
-  $('#loginForm').addEventListener('submit', e => {
+  $('#loginForm').addEventListener('submit', async e => {
     e.preventDefault();
     touched.add('#liEmail'); touched.add('#liPass');
     const errs = renderLoginErrors();
     if (errs.em || errs.pw) return;
     const em = $('#liEmail').value.trim().toLowerCase(), pw = $('#liPass').value;
+    if (be.mode === 'firebase') {
+      busy($('#loginBtn'), true, 'Signing in…');
+      try {
+        const { user } = await be.auth.signInWithEmailAndPassword(em, pw);
+        $('#loginErr').textContent = '';
+        if (!user.emailVerified) { showVerify(user.email); return; }
+        await loadProfile(); go('home');
+      } catch (err) { $('#loginErr').textContent = fbMsg(err); }
+      finally { busy($('#loginBtn'), false); }
+      return;
+    }
     if (state.account && state.account.email === em) {
       if (state.account.password !== pw) return $('#loginErr').textContent = 'That password is incorrect. Check it and try again.';
       state.user = { name: state.account.name, email: state.account.email, phone: state.account.phone };
@@ -699,7 +824,7 @@ This publication is designed to provide helpful information to the recipient. Al
     $(s).addEventListener('input', () => { $('#regErr').textContent = ''; renderRegErrors(); });
   });
   $('#rgCountry').addEventListener('change', () => { syncPhonePlaceholder(); renderRegErrors(); });
-  $('#regForm').addEventListener('submit', e => {
+  $('#regForm').addEventListener('submit', async e => {
     e.preventDefault();
     regInputs.forEach(s => touched.add(s));
     const errs = renderRegErrors();
@@ -708,17 +833,61 @@ This publication is designed to provide helpful information to the recipient. Al
     const email = $('#rgEmail').value.trim().toLowerCase();
     state.pending = { name: $('#rgUser').value.trim().replace(/\s+/g, ' '), phone: `${c.code} ${phoneDigits()}`, email, password: $('#rgPass').value };
     state.user = { name: state.pending.name, phone: state.pending.phone, email };
-    $('#vfEmail').textContent = email;
+    if (be.mode === 'firebase') {
+      busy($('#regBtn'), true, 'Creating account…');
+      try {
+        const { user } = await be.auth.createUserWithEmailAndPassword(email, state.pending.password);
+        await user.updateProfile({ displayName: state.pending.name });
+        await userDoc().set({ name: state.pending.name, email, phone: state.pending.phone, country: c.iso, emailVerified: false, createdAt: stamp() });
+        await user.sendEmailVerification();
+        state.pending = null;
+        showVerify(email);
+      } catch (err) { $('#regErr').textContent = fbMsg(err); }
+      finally { busy($('#regBtn'), false); renderRegErrors(); }
+      return;
+    }
+    showVerify(email);
+  });
+  function showVerify(email) {
+    $$('.vfEmail').forEach(el => el.textContent = email);
     $('#vfCode').value = ''; $('#vfBtn').disabled = true; $('#vfErr').textContent = '';
+    $('#vlErr').textContent = ''; $('#vlOk').textContent = '';
     go('verify');
-  });
-  $('#forgotBtn').addEventListener('click', () => {
-    $('#regErr').style.color = 'var(--muted)';
-    $('#regErr').textContent = 'Password reset is not part of this prototype.';
-    setTimeout(() => { $('#regErr').style.color = ''; }, 3000);
-  });
+  }
+  async function forgot(emailSel, errSel) {
+    const em = $(emailSel).value.trim().toLowerCase(), out = $(errSel);
+    const bad = emailError(em);
+    out.style.color = '';
+    if (bad) { out.textContent = 'To reset your password, first enter your email above. ' + (em ? bad : ''); return; }
+    if (be.mode !== 'firebase') { out.style.color = 'var(--muted)'; out.textContent = 'Demo mode: password reset emails are sent once Firebase is connected.'; return; }
+    try {
+      await be.auth.sendPasswordResetEmail(em);
+      out.style.color = 'var(--good)'; out.textContent = `If an account exists for ${em}, a reset link is on its way.`;
+    } catch (err) { out.textContent = fbMsg(err); }
+  }
+  $('#forgotBtn').addEventListener('click', () => forgot('#rgEmail', '#regErr'));
+  $('#liForgot').addEventListener('click', () => forgot('#liEmail', '#loginErr'));
 
   // ---------- verify ----------
+  $('#vlCheck').addEventListener('click', async () => {
+    const u = be.auth && be.auth.currentUser;
+    if (!u) { go('login'); return; }
+    busy($('#vlCheck'), true, 'Checking…'); $('#vlErr').textContent = ''; $('#vlOk').textContent = '';
+    try {
+      await u.reload();
+      if (be.auth.currentUser.emailVerified) { await loadProfile(); go('home'); }
+      else $('#vlErr').textContent = 'Your email is not verified yet. Click the link in the email, then try again.';
+    } catch (err) { $('#vlErr').textContent = fbMsg(err); }
+    finally { busy($('#vlCheck'), false); }
+  });
+  $('#vlResend').addEventListener('click', async () => {
+    const u = be.auth && be.auth.currentUser;
+    if (!u) { go('login'); return; }
+    $('#vlErr').textContent = ''; $('#vlOk').textContent = '';
+    try { await u.sendEmailVerification(); $('#vlOk').textContent = 'Sent. Check your inbox.'; }
+    catch (err) { $('#vlErr').textContent = fbMsg(err); }
+  });
+  $('#vlBack').addEventListener('click', async () => { if (be.auth) await be.auth.signOut(); go('login'); });
   $('#vfCode').addEventListener('input', e => {
     e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
     $('#vfBtn').disabled = e.target.value.length !== 4;
@@ -742,6 +911,10 @@ This publication is designed to provide helpful information to the recipient. Al
     $('#ackLabel').classList.toggle('disabled', !state.readCopyright);
     $('#ackHelp').hidden = state.readCopyright;
     $('#startQuiz').disabled = !ack.checked;
+    loadHistory().then(list => {
+      $('#historyPanel').hidden = !list.length;
+      $('#history').innerHTML = list.map(r => `<li><span>${r.date.toLocaleDateString(undefined, { dateStyle: 'medium' })}</span><b>${r.correct} / ${r.n} (${r.pct}%)</b></li>`).join('');
+    }).catch(err => console.warn('history', err));
   }
   $('#menuBtn').addEventListener('click', e => {
     e.stopPropagation();
@@ -749,8 +922,9 @@ This publication is designed to provide helpful information to the recipient. Al
     $('#menuBtn').setAttribute('aria-expanded', String(!m.hidden));
   });
   document.addEventListener('click', e => { if (!e.target.closest('#menu')) $('#menu').hidden = true; });
-  $('#logoutBtn').addEventListener('click', () => {
+  $('#logoutBtn').addEventListener('click', async () => {
     state.readCopyright = false; $('#ackBox').checked = false;
+    if (be.mode === 'firebase') await be.auth.signOut().catch(console.warn);
     go('landing');
   });
 
@@ -773,7 +947,10 @@ This publication is designed to provide helpful information to the recipient. Al
   $('#crModal').addEventListener('click', e => { if (e.target.id === 'crModal') closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#crModal').hidden) closeModal(); });
   $('#crDone').addEventListener('click', () => { state.readCopyright = true; closeModal(); $('#ackBox').focus(); });
-  $('#ackBox').addEventListener('change', () => { $('#startQuiz').disabled = !$('#ackBox').checked; });
+  $('#ackBox').addEventListener('change', () => {
+    $('#startQuiz').disabled = !$('#ackBox').checked;
+    if ($('#ackBox').checked && be.mode === 'firebase') userDoc().set({ copyrightAcknowledgedAt: stamp() }, { merge: true }).catch(console.warn);
+  });
   $('#startQuiz').addEventListener('click', () => go('setup'));
 
   // ---------- setup ----------
@@ -872,6 +1049,14 @@ This publication is designed to provide helpful information to the recipient. Al
   });
   $('#bDone').addEventListener('click', () => {
     saveCurrent();
+    state.quizId = null;
+    if (be.mode === 'firebase') {
+      userDoc().collection('quizzes').add({
+        count: state.questions.length,
+        questions: state.questions.map(q => ({ question: q.q.trim(), options: q.opts.map(o => o.trim()), correctIndex: q.correct })),
+        createdAt: stamp(),
+      }).then(ref => { state.quizId = ref.id; }).catch(err => console.warn('save quiz', err));
+    }
     state.answers = state.questions.map(() => null);
     state.qIndex = 0;
     go('quiz');
@@ -935,6 +1120,7 @@ This publication is designed to provide helpful information to the recipient. Al
     const skipped = state.answers.filter(a => a === null).length;
     const pct = Math.round(correct / n * 100);
     state.result = { n, correct, skipped, pct, pass: pct >= 65, date: new Date() };
+    saveAttempt(state.result);
     $('#sPct').textContent = pct + '%';
     $('#sFrac').textContent = `${correct} of ${n} correct`;
     $('#sCorrect').textContent = correct;
@@ -952,6 +1138,18 @@ This publication is designed to provide helpful information to the recipient. Al
       ring.style.transition = 'stroke-dashoffset .9s ease-out';
       ring.style.strokeDashoffset = 326.7 * (1 - pct / 100);
     }));
+  }
+  async function saveAttempt(r) {
+    const out = $('#sSaved');
+    if (be.mode !== 'firebase') { state.history.push(r); out.textContent = 'Demo mode: this result is not saved to a database.'; return; }
+    out.textContent = 'Saving your result…';
+    try {
+      await userDoc().collection('attempts').add({
+        quizId: state.quizId, total: r.n, correct: r.correct, skipped: r.skipped, pct: r.pct, pass: r.pass,
+        answers: state.answers.map(a => a === null ? -1 : a), createdAt: stamp(),
+      });
+      out.textContent = 'Saved to your account.';
+    } catch (err) { out.textContent = 'Could not save this result: ' + fbMsg(err); }
   }
   $('#retake').addEventListener('click', () => {
     state.answers = state.questions.map(() => null); state.qIndex = 0; go('quiz');
@@ -972,6 +1170,8 @@ This publication is designed to provide helpful information to the recipient. Al
   $('#printBtn').addEventListener('click', () => { try { window.print(); } catch (_) {} });
 
   go('landing');
+  renderMode();
+  initBackend();
 })();
 </script>
 
