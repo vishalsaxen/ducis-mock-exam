@@ -81,6 +81,20 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
 .ok-msg { color: var(--good); font-size: 14px; margin: 0; }
 .history { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .history li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; background: var(--bg); border-radius: 12px; padding: 10px 12px; font-variant-numeric: tabular-nums; }
+.roles { border: 1px dashed var(--line); border-radius: 14px; padding: 10px 14px; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.roles legend { font-size: 12px; color: var(--muted); padding: 0 4px; }
+.roles label { display: flex; gap: 8px; align-items: center; font-weight: 600; cursor: pointer; }
+.roles input { width: 18px; height: 18px; accent-color: var(--navy); }
+.pill.role { background: #E6E9F4; color: var(--navy); font-size: 11px; padding: 2px 10px; margin-left: 6px; vertical-align: middle; }
+.pill.role.admin { background: var(--navy); color: #fff; }
+.pill.draft { background: #FFF3D6; color: #8A5A00; }
+.exam-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.exam-card h3 { margin: 0; font-size: 18px; overflow-wrap: anywhere; }
+.exam-card .meta { margin: 0; }
+.exam-card .row > * { flex: 1 1 100px; }
+.exam-card .danger { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 35%, var(--line)); }
+.opt-edit.dup input[type=text] { border-color: var(--bad); background: var(--bad-bg); }
+.dup-msg { background: var(--bad-bg); color: var(--bad); border-radius: 12px; padding: 10px 14px; font-size: 14px; font-weight: 600; margin: 0; }
 .err { color: var(--bad); font-size: 14px; min-height: 1.2em; margin: 0; }
 .back { background: none; border: 0; font: inherit; color: var(--violet); cursor: pointer; padding: 0; font-weight: 600; }
 
@@ -215,6 +229,21 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
 
 <div class="app" id="app">
 
+  <!-- Signed-in top bar, shared by every signed-in screen -->
+  <header class="userbar" id="topbar" style="position:relative" hidden>
+    <div class="avatar" id="avatar">JA</div>
+    <div class="who"><b id="uName">Jeki Anung</b><span id="uEmail">jekianung@gmail.com</span> <span class="pill role" id="uRole">Student</span></div>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="menu" id="menu" hidden>
+      <button data-go="admin" id="mAdmin" hidden>Admin dashboard</button>
+      <button data-go="home" id="mHome">Student home</button>
+      <button data-go="exams">Mock exams</button>
+      <button id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
   <!-- 1. Landing -->
   <section data-screen="landing" class="center">
     <h1>Welcome To Mock Exam</h1>
@@ -239,6 +268,10 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
         <p class="ferr" id="liPassErr"></p>
       </div>
       <div class="right"><button type="button" class="link" id="liForgot">Forgot Password?</button></div>
+      <fieldset class="roles demo-only"><legend>Demo: sign in as</legend>
+        <label><input type="radio" name="liRole" value="student" checked> Student</label>
+        <label><input type="radio" name="liRole" value="admin"> Admin</label>
+      </fieldset>
       <p class="err" id="loginErr"></p>
       <button class="btn btn-violet" type="submit" id="loginBtn">Login</button>
       <p class="center" style="margin:0">New here? <button type="button" class="link" style="font-size:15px" data-go="register">Create an account</button></p>
@@ -277,6 +310,11 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
         <p class="ferr" id="rgPass2Err"></p>
       </div>
       <div class="right"><button type="button" class="link" id="forgotBtn">Forgot Password?</button></div>
+      <fieldset class="roles demo-only"><legend>Demo: register as</legend>
+        <label><input type="radio" name="rgRole" value="student" checked> Student</label>
+        <label><input type="radio" name="rgRole" value="admin"> Admin</label>
+      </fieldset>
+      <p class="meta fb-only" style="margin:0">New accounts are students. An admin is set up in Firebase by the site owner.</p>
       <p class="err" id="regErr"></p>
       <button class="btn btn-violet" type="submit" id="regBtn" disabled>Request a code</button>
       <p class="center" style="margin:0">Already registered? <button type="button" class="link" style="font-size:15px" data-go="login">Login</button></p>
@@ -308,18 +346,6 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
 
   <!-- 4. User info + About ITIL -->
   <section data-screen="home" hidden>
-    <div class="userbar" style="position:relative">
-      <div class="avatar" id="avatar">JA</div>
-      <div class="who"><b id="uName">Jeki Anung</b><span id="uEmail">jekianung@gmail.com</span></div>
-      <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-      </button>
-      <div class="menu" id="menu" hidden>
-        <button data-go="home">Home</button>
-        <button id="logoutBtn">Log out</button>
-      </div>
-    </div>
-
     <div class="stack">
       <div class="cover" aria-label="ITIL Foundation Version 5, Sample Paper 1 cover">
         <div class="tri"></div><div class="dots"></div>
@@ -367,11 +393,35 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
     </div>
   </section>
 
-  <!-- 5. Quiz setup -->
-  <section data-screen="setup" hidden>
+  <!-- Admin dashboard -->
+  <section data-screen="admin" hidden>
+    <p class="eyebrow" style="margin-top:8px">Admin</p>
+    <h1 style="margin-top:0">Mock exams</h1>
+    <p class="lede">Create mock exams here. Students only see exams you publish. They can attempt them but cannot create or change questions.</p>
+    <button class="btn btn-navy" id="newExam">Create a mock exam</button>
+    <p class="ok-msg" id="adminOk" style="margin-top:8px"></p>
+    <p class="err" id="adminErr"></p>
+    <div class="stack" id="adminList"></div>
+    <p class="hint" id="adminEmpty" hidden>No mock exams yet. Create the first one.</p>
+  </section>
+
+  <!-- Student: choose an exam -->
+  <section data-screen="exams" hidden>
     <button class="back" data-go="home">&larr; Back</button>
-    <h1>Quiz</h1>
-    <p class="lede">How many questions should this quiz have? You will write each question with four options and mark the correct one.</p>
+    <h1>Choose a mock exam</h1>
+    <p class="lede">These are the mock exams published by your instructor. Pick one to attempt.</p>
+    <p class="err" id="examsErr"></p>
+    <div class="stack" id="examList"></div>
+    <p class="hint" id="examsEmpty" hidden>No mock exams are published yet. Check back later.</p>
+  </section>
+
+  <!-- 5. Quiz setup (admin) -->
+  <section data-screen="setup" hidden>
+    <button class="back" data-go="admin">&larr; Admin dashboard</button>
+    <h1 id="setupTitle">New mock exam</h1>
+    <p class="lede">Name the exam and choose how many questions it has. You will write each question with four different options and mark the correct one.</p>
+    <div class="field" style="margin-bottom:16px"><label for="exTitle">Exam title</label><input id="exTitle" type="text" maxlength="80" placeholder="e.g. ITIL Foundation Practice Set 1" aria-describedby="exTitleErr"><p class="ferr" id="exTitleErr"></p></div>
+    <p style="font-weight:500;margin:0 0 8px">Number of questions</p>
     <div class="chips" id="chips" role="group" aria-label="Number of questions">
       <button class="chip" data-n="5" aria-pressed="true">5<small>questions</small></button>
       <button class="chip" data-n="10" aria-pressed="false">10<small>questions</small></button>
@@ -391,28 +441,35 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
   <!-- 6. Question builder -->
   <section data-screen="builder" hidden>
     <div class="row" style="align-items:center;margin-bottom:12px">
-      <button class="back" data-go="setup" style="flex:0 0 auto">&larr; Change count</button>
+      <button class="back" data-go="setup" style="flex:0 0 auto">&larr; Exam details</button>
       <span class="meta right" id="bMeta">0 of 5 complete</span>
     </div>
     <div class="progress"><i id="bProg" style="width:0%"></i></div>
-    <h2 style="margin-top:20px" id="bTitle">Question 1 of 5</h2>
+    <p class="eyebrow" style="margin:20px 0 0" id="bExam">New mock exam</p>
+    <h2 style="margin-top:4px" id="bTitle">Question 1 of 5</h2>
     <div class="stack">
       <div class="field"><label for="bQ">Question</label><textarea id="bQ" placeholder="Type the question"></textarea></div>
       <div class="stack" style="gap:10px" id="bOpts" role="radiogroup" aria-label="Options, select the correct answer"></div>
-      <p class="meta" style="margin:0">Select the circle next to the correct option.</p>
+      <p class="dup-msg" id="bDup" role="alert" hidden></p>
+      <p class="meta" style="margin:0">Select the circle next to the correct option. All four options must be different.</p>
       <p class="err" id="bErr"></p>
       <div class="row">
         <button class="btn btn-ghost btn-small" id="bPrev">Previous</button>
         <button class="btn btn-navy btn-small" id="bNext">Save and next</button>
       </div>
       <div class="qnav" id="bNav"></div>
-      <button class="btn btn-violet" id="bDone" disabled>Take the quiz</button>
+      <p class="meta" id="bSaved" style="margin:0"></p>
+      <div class="row">
+        <button class="btn btn-ghost btn-small" id="bDraft">Save as draft</button>
+        <button class="btn btn-violet btn-small" id="bPublish" disabled>Publish to students</button>
+      </div>
       <button class="link" id="bSample" style="font-size:14px;align-self:center">Fill remaining with sample ITIL questions</button>
     </div>
   </section>
 
   <!-- 7. Take quiz -->
   <section data-screen="quiz" hidden>
+    <p class="eyebrow" id="qExam" style="margin:0 0 6px"></p>
     <div class="row" style="align-items:center;margin-bottom:12px">
       <span class="meta" id="qMeta" style="flex:1 1 auto">Question 1 of 5</span>
       <span class="meta right" id="qAnswered" style="flex:1 1 auto">0 answered</span>
@@ -474,6 +531,7 @@ select { width: 100%; font: inherit; font-size: 15px; color: var(--ink); backgro
         <img src="data:image/jpeg;base64,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" alt="Ducis Group">
       </div>
       <dl>
+        <dt>Exam</dt><dd id="pExam"></dd>
         <dt>Candidate</dt><dd id="pName"></dd>
         <dt>Email</dt><dd id="pEmail"></dd>
         <dt>Date</dt><dd id="pDate"></dd>
@@ -551,7 +609,10 @@ window.DUCIS_FIREBASE_CONFIG = {
     qIndex: 0,
     result: null,
     history: [],       // demo-mode results
-    quizId: null,
+    role: 'student',   // 'student' | 'admin'
+    exams: [],         // demo-mode exams: {id, title, questions, published, createdAt, updatedAt}
+    editing: null,     // exam being written by an admin: {id|null, title, published}
+    exam: null,        // exam a student is attempting
   };
 
   const SAMPLES = [
@@ -568,11 +629,18 @@ window.DUCIS_FIREBASE_CONFIG = {
   ];
 
   // ---------- navigation ----------
+  const SIGNED_IN = ['home', 'admin', 'exams', 'setup', 'builder', 'quiz', 'score', 'thanks'];
+  const ADMIN_ONLY = ['admin', 'setup', 'builder'];
   function go(name) {
+    if (ADMIN_ONLY.includes(name) && state.role !== 'admin') name = 'home';
     $$('[data-screen]').forEach(s => s.hidden = s.dataset.screen !== name);
+    $('#topbar').hidden = !SIGNED_IN.includes(name);
+    if (!$('#topbar').hidden) renderTopbar();
     $('#menu').hidden = true;
     window.scrollTo(0, 0);
     if (name === 'home') renderHome();
+    if (name === 'admin') renderAdmin();
+    if (name === 'exams') renderExams();
     if (name === 'setup') renderSetup();
     if (name === 'builder') renderBuilder();
     if (name === 'quiz') renderQuiz();
@@ -582,6 +650,7 @@ window.DUCIS_FIREBASE_CONFIG = {
     const t = e.target.closest('[data-go]');
     if (t) { e.preventDefault(); go(t.dataset.go); }
   });
+  const goStart = () => go(state.role === 'admin' ? 'admin' : 'home');
 
   // ---------- backend: Firebase when configured, otherwise demo ----------
   const FB_CFG = window.DUCIS_FIREBASE_CONFIG || {};
@@ -629,7 +698,7 @@ window.DUCIS_FIREBASE_CONFIG = {
         be.auth = firebase.auth(); be.db = firebase.firestore(); be.mode = 'firebase';
         // Restore a signed-in, verified session on reload.
         const first = await new Promise(res => { const off = be.auth.onAuthStateChanged(u => { off(); res(u); }); });
-        if (first && first.emailVerified && !$('[data-screen=landing]').hidden) { await loadProfile(); go('home'); }
+        if (first && first.emailVerified && !$('[data-screen=landing]').hidden) { await loadProfile(); goStart(); }
       } catch (e) {
         console.warn('Firebase unavailable, using demo mode:', e);
         be.mode = 'demo'; be.error = 'Firebase unreachable: running in demo mode';
@@ -642,15 +711,56 @@ window.DUCIS_FIREBASE_CONFIG = {
     let data = {};
     try { const snap = await userDoc().get(); data = snap.exists ? snap.data() : {}; } catch (e) { console.warn(e); }
     state.user = { name: data.name || u.displayName || u.email.split('@')[0], email: u.email, phone: data.phone || '' };
+    state.role = data.role === 'admin' ? 'admin' : 'student';
     if (!data.emailVerified && u.emailVerified) userDoc().set({ emailVerified: true }, { merge: true }).catch(console.warn);
   }
   async function loadHistory() {
     if (be.mode === 'firebase') {
       const qs = await userDoc().collection('attempts').orderBy('createdAt', 'desc').limit(5).get();
-      return qs.docs.map(d => { const a = d.data(); return { date: a.createdAt ? a.createdAt.toDate() : new Date(), correct: a.correct, n: a.total, pct: a.pct }; });
+      return qs.docs.map(d => { const a = d.data(); return { date: a.createdAt ? a.createdAt.toDate() : new Date(), correct: a.correct, n: a.total, pct: a.pct, title: a.examTitle || '' }; });
     }
     return state.history.slice(-5).reverse();
   }
+  // Exams live in exams/{id}. Students can read published ones; only admins can write (see firestore.rules).
+  const toStored = qs => qs.map(q => ({ question: q.q.trim(), options: q.opts.map(o => o.trim()), correctIndex: q.correct }));
+  const fromStored = qs => (qs || []).map(q => ({ q: q.question, opts: [...q.options], correct: q.correctIndex }));
+  const tsDate = v => v && v.toDate ? v.toDate() : (v instanceof Date ? v : new Date());
+  const exams = {
+    async list(includeDrafts) {
+      let list;
+      if (be.mode === 'firebase') {
+        const col = be.db.collection('exams');
+        const qs = await (includeDrafts ? col.get() : col.where('published', '==', true).get());
+        list = qs.docs.map(d => { const x = d.data(); return { id: d.id, title: x.title, published: !!x.published, questions: fromStored(x.questions), createdAt: tsDate(x.createdAt), updatedAt: tsDate(x.updatedAt) }; });
+      } else {
+        list = state.exams.filter(x => includeDrafts || x.published).map(x => ({ ...x, questions: x.questions.map(q => ({ ...q, opts: [...q.opts] })) }));
+      }
+      return list.sort((a, b) => b.createdAt - a.createdAt);
+    },
+    async save({ id, title, questions, published }) {
+      if (be.mode === 'firebase') {
+        const data = { title, published, count: questions.length, questions: toStored(questions), updatedAt: stamp(), updatedBy: be.auth.currentUser.uid };
+        if (id) { await be.db.collection('exams').doc(id).set(data, { merge: true }); return id; }
+        const ref = await be.db.collection('exams').add({ ...data, createdAt: stamp(), createdBy: be.auth.currentUser.uid });
+        return ref.id;
+      }
+      const now = new Date(), copy = questions.map(q => ({ q: q.q.trim(), opts: q.opts.map(o => o.trim()), correct: q.correct }));
+      const found = id && state.exams.find(x => x.id === id);
+      if (found) { Object.assign(found, { title, published, questions: copy, updatedAt: now }); return id; }
+      const nid = 'demo-' + Math.random().toString(36).slice(2, 9);
+      state.exams.push({ id: nid, title, published, questions: copy, createdAt: now, updatedAt: now });
+      return nid;
+    },
+    async setPublished(id, published) {
+      if (be.mode === 'firebase') return be.db.collection('exams').doc(id).set({ published, updatedAt: stamp() }, { merge: true });
+      const x = state.exams.find(e => e.id === id); if (x) { x.published = published; x.updatedAt = new Date(); }
+    },
+    async remove(id) {
+      if (be.mode === 'firebase') return be.db.collection('exams').doc(id).delete();
+      state.exams = state.exams.filter(e => e.id !== id);
+    },
+  };
+
   function busy(btn, on, label) {
     if (on) { btn.dataset.label = btn.textContent; btn.textContent = label; btn.disabled = true; }
     else { btn.textContent = btn.dataset.label || btn.textContent; btn.disabled = false; }
@@ -778,7 +888,7 @@ window.DUCIS_FIREBASE_CONFIG = {
         const { user } = await be.auth.signInWithEmailAndPassword(em, pw);
         $('#loginErr').textContent = '';
         if (!user.emailVerified) { showVerify(user.email); return; }
-        await loadProfile(); go('home');
+        await loadProfile(); goStart();
       } catch (err) { $('#loginErr').textContent = fbMsg(err); }
       finally { busy($('#loginBtn'), false); }
       return;
@@ -791,8 +901,9 @@ window.DUCIS_FIREBASE_CONFIG = {
       const local = em.split('@')[0].replace(/[._+-]+/g, ' ').trim();
       state.user = { name: local.replace(/\b\w/g, c => c.toUpperCase()) || em, email: em, phone: '' };
     }
+    state.role = $('input[name=liRole]:checked').value;
     $('#loginErr').textContent = '';
-    go('home');
+    goStart();
   });
 
   // ---------- register ----------
@@ -834,12 +945,13 @@ window.DUCIS_FIREBASE_CONFIG = {
     const email = $('#rgEmail').value.trim().toLowerCase();
     state.pending = { name: $('#rgUser').value.trim().replace(/\s+/g, ' '), phone: `${c.code} ${phoneDigits()}`, email, password: $('#rgPass').value };
     state.user = { name: state.pending.name, phone: state.pending.phone, email };
+    state.pending.role = $('input[name=rgRole]:checked').value;
     if (be.mode === 'firebase') {
       busy($('#regBtn'), true, 'Creating account…');
       try {
         const { user } = await be.auth.createUserWithEmailAndPassword(email, state.pending.password);
         await user.updateProfile({ displayName: state.pending.name });
-        await userDoc().set({ name: state.pending.name, email, phone: state.pending.phone, country: c.iso, emailVerified: false, createdAt: stamp() });
+        await userDoc().set({ name: state.pending.name, email, phone: state.pending.phone, country: c.iso, role: 'student', emailVerified: false, createdAt: stamp() });
         await user.sendEmailVerification();
         state.pending = null;
         showVerify(email);
@@ -876,7 +988,7 @@ window.DUCIS_FIREBASE_CONFIG = {
     busy($('#vlCheck'), true, 'Checking…'); $('#vlErr').textContent = ''; $('#vlOk').textContent = '';
     try {
       await u.reload();
-      if (be.auth.currentUser.emailVerified) { await loadProfile(); go('home'); }
+      if (be.auth.currentUser.emailVerified) { await loadProfile(); goStart(); }
       else $('#vlErr').textContent = 'Your email is not verified yet. Click the link in the email, then try again.';
     } catch (err) { $('#vlErr').textContent = fbMsg(err); }
     finally { busy($('#vlCheck'), false); }
@@ -897,16 +1009,23 @@ window.DUCIS_FIREBASE_CONFIG = {
   $('#verifyForm').addEventListener('submit', e => {
     e.preventDefault();
     if ($('#vfCode').value.length !== 4) return $('#vfErr').textContent = 'Enter the 4-digit code.';
-    if (state.pending) { state.account = state.pending; state.pending = null; }
-    go('home');
+    if (state.pending) { state.account = state.pending; state.role = state.pending.role || 'student'; state.pending = null; }
+    goStart();
   });
 
   // ---------- home ----------
   function initials(n) { return n.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?'; }
-  function renderHome() {
+  function renderTopbar() {
     $('#uName').textContent = state.user.name;
     $('#uEmail').textContent = state.user.email;
     $('#avatar').textContent = initials(state.user.name);
+    const admin = state.role === 'admin';
+    $('#uRole').textContent = admin ? 'Admin' : 'Student';
+    $('#uRole').classList.toggle('admin', admin);
+    $('#mAdmin').hidden = !admin;
+    $('#mHome').textContent = admin ? 'Student view' : 'Home';
+  }
+  function renderHome() {
     const ack = $('#ackBox');
     ack.disabled = !state.readCopyright;
     $('#ackLabel').classList.toggle('disabled', !state.readCopyright);
@@ -914,7 +1033,7 @@ window.DUCIS_FIREBASE_CONFIG = {
     $('#startQuiz').disabled = !ack.checked;
     loadHistory().then(list => {
       $('#historyPanel').hidden = !list.length;
-      $('#history').innerHTML = list.map(r => `<li><span>${r.date.toLocaleDateString(undefined, { dateStyle: 'medium' })}</span><b>${r.correct} / ${r.n} (${r.pct}%)</b></li>`).join('');
+      $('#history').innerHTML = list.map(r => `<li><span>${esc(r.title || 'Mock exam')} · ${r.date.toLocaleDateString(undefined, { dateStyle: 'medium' })}</span><b>${r.correct} / ${r.n} (${r.pct}%)</b></li>`).join('');
     }).catch(err => console.warn('history', err));
   }
   $('#menuBtn').addEventListener('click', e => {
@@ -924,7 +1043,7 @@ window.DUCIS_FIREBASE_CONFIG = {
   });
   document.addEventListener('click', e => { if (!e.target.closest('#menu')) $('#menu').hidden = true; });
   $('#logoutBtn').addEventListener('click', async () => {
-    state.readCopyright = false; $('#ackBox').checked = false;
+    state.readCopyright = false; state.role = 'student'; state.exam = null; $('#ackBox').checked = false; $('input[name=liRole][value=student]').checked = true;
     if (be.mode === 'firebase') await be.auth.signOut().catch(console.warn);
     go('landing');
   });
@@ -952,10 +1071,92 @@ window.DUCIS_FIREBASE_CONFIG = {
     $('#startQuiz').disabled = !$('#ackBox').checked;
     if ($('#ackBox').checked && be.mode === 'firebase') userDoc().set({ copyrightAcknowledgedAt: stamp() }, { merge: true }).catch(console.warn);
   });
-  $('#startQuiz').addEventListener('click', () => go('setup'));
+  $('#startQuiz').addEventListener('click', () => go('exams'));
+
+  // ---------- student: exam list ----------
+  async function renderExams() {
+    $('#examsErr').textContent = ''; $('#examList').innerHTML = '<p class="meta">Loading exams…</p>'; $('#examsEmpty').hidden = true;
+    try {
+      const list = await exams.list(false);
+      state.examCache = list;
+      $('#examsEmpty').hidden = list.length > 0;
+      $('#examList').innerHTML = list.map(x => `
+        <div class="exam-card">
+          <h3>${esc(x.title)}</h3>
+          <p class="meta">${x.questions.length} question${x.questions.length === 1 ? '' : 's'} · Multiple choice · Pass mark 65%</p>
+          <button class="btn btn-navy btn-small" data-start="${x.id}" style="width:100%">Start this exam</button>
+        </div>`).join('');
+    } catch (err) { $('#examList').innerHTML = ''; $('#examsErr').textContent = 'Could not load exams: ' + fbMsg(err); }
+  }
+  $('#examList').addEventListener('click', e => {
+    const b = e.target.closest('[data-start]'); if (!b) return;
+    const x = state.examCache.find(e => e.id === b.dataset.start); if (!x) return;
+    state.exam = { id: x.id, title: x.title };
+    state.questions = x.questions;
+    state.answers = x.questions.map(() => null);
+    state.qIndex = 0;
+    go('quiz');
+  });
+
+  // ---------- admin: dashboard ----------
+  async function renderAdmin() {
+    $('#adminErr').textContent = ''; $('#adminList').innerHTML = '<p class="meta">Loading exams…</p>'; $('#adminEmpty').hidden = true;
+    try {
+      const list = await exams.list(true);
+      state.adminCache = list;
+      $('#adminEmpty').hidden = list.length > 0;
+      $('#adminList').innerHTML = list.map(x => `
+        <div class="exam-card" data-id="${x.id}">
+          <div class="row" style="align-items:center;gap:8px"><h3 style="flex:1 1 auto">${esc(x.title)}</h3>
+            <span class="pill ${x.published ? 'pass' : 'draft'}" style="flex:0 0 auto">${x.published ? 'Published' : 'Draft'}</span></div>
+          <p class="meta">${x.questions.length} question${x.questions.length === 1 ? '' : 's'} · Updated ${x.updatedAt.toLocaleDateString(undefined, { dateStyle: 'medium' })}</p>
+          <div class="row">
+            <button class="btn btn-ghost btn-small" data-act="edit">Edit</button>
+            <button class="btn btn-ghost btn-small" data-act="toggle" ${!x.published && !x.questions.every(complete) ? 'disabled title="Finish all questions before publishing"' : ''}>${x.published ? 'Unpublish' : 'Publish'}</button>
+            <button class="btn btn-ghost btn-small danger" data-act="delete">Delete</button>
+          </div>
+          <div class="row confirm" hidden>
+            <p class="meta" style="flex:1 1 100%;color:var(--bad)">Delete "${esc(x.title)}"? Students will no longer see it. This cannot be undone.</p>
+            <button class="btn btn-ghost btn-small" data-act="cancel">Keep it</button>
+            <button class="btn btn-navy btn-small" data-act="confirm" style="background:var(--bad)">Delete exam</button>
+          </div>
+        </div>`).join('');
+    } catch (err) { $('#adminList').innerHTML = ''; $('#adminErr').textContent = 'Could not load exams: ' + fbMsg(err); }
+  }
+  $('#adminList').addEventListener('click', async e => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const card = b.closest('.exam-card'), id = card.dataset.id, x = state.adminCache.find(e => e.id === id);
+    const act = b.dataset.act;
+    $('#adminOk').textContent = '';
+    if (act === 'edit') {
+      state.editing = { id, title: x.title, published: x.published };
+      state.questions = x.questions; state.count = x.questions.length; state.bIndex = 0;
+      $('#exTitle').value = x.title; $('#customN').value = '';
+      go('builder'); return;
+    }
+    if (act === 'delete') { card.querySelector('.confirm').hidden = false; return; }
+    if (act === 'cancel') { card.querySelector('.confirm').hidden = true; return; }
+    try {
+      b.disabled = true;
+      if (act === 'toggle') await exams.setPublished(id, !x.published);
+      if (act === 'confirm') await exams.remove(id);
+      renderAdmin();
+    } catch (err) { b.disabled = false; $('#adminErr').textContent = fbMsg(err); }
+  });
+  $('#newExam').addEventListener('click', () => {
+    $('#adminOk').textContent = '';
+    state.editing = { id: null, title: '', published: false };
+    state.questions = []; state.count = 5;
+    $('#exTitle').value = ''; $('#customN').value = '';
+    touched.delete('#exTitle'); $('#exTitleErr').textContent = ''; $('#exTitle').classList.remove('invalid');
+    go('setup');
+  });
 
   // ---------- setup ----------
+  const titleError = v => !v ? 'Give the exam a title.' : (v.length < 3 ? 'Title must be at least 3 characters.' : '');
+  $('#exTitle').addEventListener('input', () => { if (touched.has('#exTitle')) setFieldError('#exTitle', '#exTitleErr', titleError($('#exTitle').value.trim())); });
   function renderSetup() {
+    $('#setupTitle').textContent = state.editing && state.editing.id ? 'Edit mock exam' : 'New mock exam';
     $$('#chips .chip').forEach(c => c.setAttribute('aria-pressed', String(+c.dataset.n === state.count && !$('#customN').value)));
     $('#toBuilder').textContent = `Create ${state.count} question${state.count === 1 ? '' : 's'}`;
   }
@@ -969,7 +1170,12 @@ window.DUCIS_FIREBASE_CONFIG = {
     renderSetup();
   });
   $('#toBuilder').addEventListener('click', () => {
-    if ($('#setupErr').textContent) return;
+    touched.add('#exTitle');
+    const te = titleError($('#exTitle').value.trim());
+    setFieldError('#exTitle', '#exTitleErr', te);
+    if (te || $('#setupErr').textContent) return;
+    if (!state.editing) state.editing = { id: null, title: '', published: false };
+    state.editing.title = $('#exTitle').value.trim();
     const old = state.questions;
     state.questions = Array.from({ length: state.count }, (_, i) => old[i] || { q: '', opts: ['', '', '', ''], correct: null });
     state.bIndex = 0;
@@ -977,7 +1183,26 @@ window.DUCIS_FIREBASE_CONFIG = {
   });
 
   // ---------- builder ----------
-  const complete = q => q.q.trim() && q.opts.every(o => o.trim()) && q.correct !== null;
+  // Options that read the same (ignoring case and extra spaces) are a conflict, e.g. A = "AGRA" and D = " agra ".
+  const norm = s => s.trim().replace(/\s+/g, ' ').toLowerCase();
+  function duplicates(opts) {
+    const seen = {}, groups = [];
+    opts.forEach((o, k) => { const n = norm(o); if (!n) return; (seen[n] = seen[n] || []).push(k); });
+    Object.values(seen).forEach(ks => { if (ks.length > 1) groups.push(ks); });
+    return groups;
+  }
+  const complete = q => q.q.trim() && q.opts.every(o => o.trim()) && q.correct !== null && duplicates(q.opts).length === 0;
+  function showDuplicates() {
+    const q = state.questions[state.bIndex], groups = duplicates(q.opts), dupIdx = groups.flat();
+    $$('#bOpts .opt-edit').forEach((row, k) => row.classList.toggle('dup', dupIdx.includes(k)));
+    $$('#bOpts input[type=text]').forEach((inp, k) => inp.setAttribute('aria-invalid', String(dupIdx.includes(k))));
+    $('#bDup').hidden = !groups.length;
+    $('#bDup').textContent = groups.map(ks => {
+      const names = ks.map(k => LETTERS[k]);
+      const list = names.length === 2 ? names.join(' and ') : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+      return `Conflict: options ${list} are the same ("${q.opts[ks[0]].trim()}"). Change one so every option is different.`;
+    }).join(' ');
+  }
   function saveCurrent() {
     const q = state.questions[state.bIndex];
     q.q = $('#bQ').value;
@@ -1000,7 +1225,10 @@ window.DUCIS_FIREBASE_CONFIG = {
       $$('#bOpts .opt-edit').forEach((row, k) => row.classList.toggle('correct', k === +r.value));
       saveCurrent(); refreshBuilderMeta();
     }));
-    $$('#bOpts input[type=text]').forEach(inp => inp.addEventListener('input', () => { saveCurrent(); refreshBuilderMeta(); }));
+    $$('#bOpts input[type=text]').forEach(inp => inp.addEventListener('input', () => { saveCurrent(); showDuplicates(); refreshBuilderMeta(); }));
+    $('#bExam').textContent = (state.editing && state.editing.title) || 'New mock exam';
+    $('#bSaved').textContent = '';
+    showDuplicates();
     $('#bPrev').disabled = i === 0;
     $('#bNext').textContent = i === n - 1 ? 'Save' : 'Save and next';
     $('#bErr').textContent = '';
@@ -1010,7 +1238,8 @@ window.DUCIS_FIREBASE_CONFIG = {
     const n = state.questions.length, done = state.questions.filter(complete).length;
     $('#bMeta').textContent = `${done} of ${n} complete`;
     $('#bProg').style.width = (done / n * 100) + '%';
-    $('#bDone').disabled = done !== n;
+    $('#bPublish').disabled = done !== n;
+    $('#bPublish').textContent = state.editing && state.editing.published ? 'Save and keep published' : 'Publish to students';
     $('#bSample').hidden = done === n;
     $('#bNav').innerHTML = state.questions.map((q, k) =>
       `<button class="qdot${complete(q) ? ' done' : ''}${k === state.bIndex ? ' current' : ''}" data-b="${k}" aria-label="Question ${k + 1}">${k + 1}</button>`).join('');
@@ -1026,6 +1255,7 @@ window.DUCIS_FIREBASE_CONFIG = {
     const q = state.questions[state.bIndex];
     if (!q.q.trim()) return $('#bErr').textContent = 'Write the question text.';
     if (!q.opts.every(o => o.trim())) return $('#bErr').textContent = 'Fill in all four options.';
+    if (duplicates(q.opts).length) { showDuplicates(); return $('#bErr').textContent = 'Fix the conflicting options before moving on.'; }
     if (q.correct === null) return $('#bErr').textContent = 'Select which option is correct.';
     if (state.bIndex < state.questions.length - 1) { state.bIndex++; renderBuilder(); }
     else {
@@ -1048,26 +1278,36 @@ window.DUCIS_FIREBASE_CONFIG = {
     });
     renderBuilder();
   });
-  $('#bDone').addEventListener('click', () => {
+  async function saveExam(publish) {
     saveCurrent();
-    state.quizId = null;
-    if (be.mode === 'firebase') {
-      userDoc().collection('quizzes').add({
-        count: state.questions.length,
-        questions: state.questions.map(q => ({ question: q.q.trim(), options: q.opts.map(o => o.trim()), correctIndex: q.correct })),
-        createdAt: stamp(),
-      }).then(ref => { state.quizId = ref.id; }).catch(err => console.warn('save quiz', err));
+    const btn = publish ? $('#bPublish') : $('#bDraft');
+    if (publish) {
+      const bad = state.questions.findIndex(q => !complete(q));
+      if (bad >= 0) { state.bIndex = bad; renderBuilder(); $('#bErr').textContent = `Question ${bad + 1} still needs work before you can publish.`; return; }
+    } else if (state.questions.some(q => duplicates(q.opts).length)) {
+      const bad = state.questions.findIndex(q => duplicates(q.opts).length);
+      state.bIndex = bad; renderBuilder(); $('#bErr').textContent = `Question ${bad + 1} has conflicting options. Fix them before saving.`; return;
     }
-    state.answers = state.questions.map(() => null);
-    state.qIndex = 0;
-    go('quiz');
-  });
+    const ed = state.editing;
+    const published = publish ? true : false;
+    busy(btn, true, 'Saving…');
+    try {
+      ed.id = await exams.save({ id: ed.id, title: ed.title, questions: state.questions, published });
+      ed.published = published;
+      busy(btn, false);
+      go('admin');
+      $('#adminOk').textContent = published ? `"${ed.title}" is published. Students can now attempt it.` : `"${ed.title}" is saved as a draft. Students can't see it yet.`;
+    } catch (err) { busy(btn, false); refreshBuilderMeta(); $('#bSaved').textContent = 'Could not save: ' + fbMsg(err); }
+  }
+  $('#bDraft').addEventListener('click', () => saveExam(false));
+  $('#bPublish').addEventListener('click', () => saveExam(true));
 
   // ---------- quiz ----------
   function renderQuiz() {
     const n = state.questions.length, i = state.qIndex, q = state.questions[i];
     const answered = state.answers.filter(a => a !== null).length;
     $('#qMeta').textContent = `Question ${i + 1} of ${n}`;
+    $('#qExam').textContent = state.exam ? state.exam.title : '';
     $('#qAnswered').textContent = `${answered} answered`;
     $('#qProg').style.width = (answered / n * 100) + '%';
     $('#qText').textContent = q.q;
@@ -1142,11 +1382,11 @@ window.DUCIS_FIREBASE_CONFIG = {
   }
   async function saveAttempt(r) {
     const out = $('#sSaved');
-    if (be.mode !== 'firebase') { state.history.push(r); out.textContent = 'Demo mode: this result is not saved to a database.'; return; }
+    if (be.mode !== 'firebase') { state.history.push({ ...r, title: state.exam ? state.exam.title : '' }); out.textContent = 'Demo mode: this result is not saved to a database.'; return; }
     out.textContent = 'Saving your result…';
     try {
       await userDoc().collection('attempts').add({
-        quizId: state.quizId, total: r.n, correct: r.correct, skipped: r.skipped, pct: r.pct, pass: r.pass,
+        examId: state.exam ? state.exam.id : null, examTitle: state.exam ? state.exam.title : '', total: r.n, correct: r.correct, skipped: r.skipped, pct: r.pct, pass: r.pass,
         answers: state.answers.map(a => a === null ? -1 : a), createdAt: stamp(),
       });
       out.textContent = 'Saved to your account.';
@@ -1160,6 +1400,7 @@ window.DUCIS_FIREBASE_CONFIG = {
   function renderThanks() {
     const r = state.result; if (!r) return;
     $('#tName').textContent = state.user.name.split(' ')[0];
+    $('#pExam').textContent = state.exam ? state.exam.title : 'Mock exam';
     $('#pName').textContent = state.user.name;
     $('#pEmail').textContent = state.user.email;
     $('#pDate').textContent = r.date.toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short' });
@@ -1169,6 +1410,12 @@ window.DUCIS_FIREBASE_CONFIG = {
     $('#pReview').innerHTML = reviewHTML();
   }
   $('#printBtn').addEventListener('click', () => { try { window.print(); } catch (_) {} });
+
+  // Demo mode starts with one published exam so the student view has something to attempt.
+  state.exams.push({
+    id: 'demo-itil-1', title: 'ITIL Foundation Practice Set 1', published: true, createdAt: new Date(), updatedAt: new Date(),
+    questions: SAMPLES.map(([q, opts, c], i) => { const s = i % 4; return { q, opts: opts.map((_, k) => opts[(k + s) % 4]), correct: (c - s + 4) % 4 }; }),
+  });
 
   go('landing');
   renderMode();
