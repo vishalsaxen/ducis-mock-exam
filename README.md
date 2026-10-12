@@ -36,7 +36,7 @@ The app runs in **demo mode** (everything kept in the browser tab) until the Fir
 ### Setup
 
 1. Firebase console > Project settings > General > Your apps: add a **Web app** (if there isn't one) and copy its config.
-2. In `index.html`, find `window.DUCIS_FIREBASE_CONFIG` near the bottom and paste `apiKey`, `messagingSenderId` and `appId` (check `authDomain`, `projectId` and `storageBucket` match too).
+2. The web config is already in `index.html` (`window.DUCIS_FIREBASE_CONFIG`). Clear `apiKey` and `appId` there to force demo mode.
 3. Authentication > Sign-in method: enable **Email/Password**.
 4. Firestore Database: create a database, then publish the rules in `firestore.rules` (paste them in the Rules tab, or run `firebase deploy --only firestore:rules`).
 5. Serve the page over http(s), not by double-clicking the file: `npx serve .` locally (localhost is an authorized domain by default), or `firebase deploy --only hosting`. Add any other domain under Authentication > Settings > Authorized domains.
